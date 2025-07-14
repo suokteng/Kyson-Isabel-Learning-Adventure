@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Quest - Interactive Learning App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        @keyframes gradient-x {
+            0%, 100% {
+                background-size: 200% 200%;
+                background-position: left center;
+            }
+            50% {
+                background-size: 200% 200%;
+                background-position: right center;
+            }
+        }
+        .animate-gradient-x {
+            animation: gradient-x 15s ease infinite;
+        }
+        .animate-bounce-slow {
+            animation: bounce 3s infinite;
+        }
+        .border-rainbow {
+            border-image: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7) 1;
+        }
+        .scale-102 {
+            transform: scale(1.02);
+        }
+        .scale-105 {
+            transform: scale(1.05);
+        }
+        .scale-110 {
+            transform: scale(1.10);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-pink-400 via-purple-500 via-blue-500 to-green-400 animate-gradient-x">
+    <div class="max-w-4xl mx-auto p-4">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-yellow-200 to-pink-200 rounded-3xl shadow-2xl p-6 mb-6 border-4 border-white transform hover:scale-105 transition-transform">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 p-4 rounded-full shadow-lg animate-bounce-slow">
+                        <i data-lucide="brain" class="h-8 w-8 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-4xl font-black bg-gradient-to-r from-purple-600 via-blue-600 to-green-600 bg-clip-text text-transparent">
+                            🚀 Knowledge Quest 🌟
+                        </h1>
+                        <p class="text-purple-700 font-bold text-lg">Learn, Explore, Conquer! 🎯</p>
+                    </div>
+                </div>
+                
+                <!-- Rank & Points Display -->
+                <div class="text-right">
+                    <div id="rankDisplay" class="bg-gray-500 text-white px-6 py-3 rounded-full mb-2 shadow-lg border-4 border-white transform hover:scale-110 transition-transform">
+                        <span class="text-3xl animate-pulse">🔰</span>
+                        <span class="ml-2 font-black text-lg">Recruit</span>
+                    </div>
+                    <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full font-bold shadow-lg">
+                        <i data-lucide="star" class="inline h-5 w-5 animate-spin"></i> <span id="pointsDisplay">0</span> Points ✨
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div id="mainContent">
+            <!-- Topic Selection Screen -->
+            <div id="topicSelection" class="bg-gradient-to-r from-yellow-100 via-pink-100 to-blue-100 rounded-3xl shadow-2xl p-8 border-4 border-white">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-black text-purple-800 mb-4">🎓 What do you want to learn today? 🤔</h2>
+                    <p class="text-purple-600 font-bold text-xl">Choose any topic and start your learning adventure! 🌈</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Topic Input -->
+                    <div class="relative transform hover:scale-105 transition-transform">
+                        <i data-lucide="search" class="absolute left-4 top-4 h-6 w-6 text-purple-500 animate-pulse"></i>
+                        <input
+                            type="text"
+                            id="topicInput"
+                            placeholder="🔍 Type any topic... (e.g., 'How does YouTube make money?', 'Ancient Egypt', 'Best car countries')"
+                            class="w-full pl-12 pr-4 py-4 text-lg border-4 border-purple-300 rounded-2xl focus:border-purple-500 focus:outline-none transition-colors bg-white shadow-lg font-semibold"
+                        />
+                    </div>
+
+                    <!-- Learning Mode Selection -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <button
+                            id="quickMode"
+                            onclick="selectMode('quick')"
+                            class="p-6 rounded-2xl border-4 border-green-300 bg-gradient-to-r from-green-50 to-white hover:border-green-400 transition-all transform hover:scale-110 shadow-lg"
+                        >
+                            <i data-lucide="zap" class="h-10 w-10 text-green-500 mx-auto mb-3 animate-bounce"></i>
+                            <h3 class="font-black text-gray-800 text-xl">⚡ Quick Overview</h3>
+                            <p class="text-sm text-gray-600 mt-2 font-bold">Get the key points fast! 🏃‍♂️</p>
+                            <div class="text-sm text-green-600 mt-2 font-bold">+15 points 🎯</div>
+                        </button>
+
+                        <button
+                            id="deepMode"
+                            onclick="selectMode('deep')"
+                            class="p-6 rounded-2xl border-4 border-blue-300 bg-gradient-to-r from-blue-50 to-white hover:border-blue-400 transition-all transform hover:scale-110 shadow-lg"
+                        >
+                            <i data-lucide="target" class="h-10 w-10 text-blue-500 mx-auto mb-3 animate-pulse"></i>
+                            <h3 class="font-black text-gray-800 text-xl">🎯 Deep Dive</h3>
+                            <p class="text-sm text-gray-600 mt-2 font-bold">Explore in detail! 🔍</p>
+                            <div class="text-sm text-blue-600 mt-2 font-bold">+30 points 🏆</div>
+                        </button>
+                    </div>
+
+                    <!-- Start Button -->
+                    <button
+                        id="startButton"
+                        onclick="startLearning()"
+                        class="w-full py-6 rounded-2xl font-black text-xl transition-all transform shadow-lg border-4 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:scale-105 shadow-2xl border-white cursor-pointer"
+                    >
+                        <i data-lucide="book-open" class="inline h-8 w-8 mr-3"></i>
+                        🚀 Start Learning Adventure! 🌟
+                    </button>
+                    
+                    <!-- Instructions -->
+                    <div id="instructions" class="text-center text-purple-600 font-bold">
+                        👆 Make sure to enter a topic and choose your learning mode!
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="loadingState" class="hidden text-center">
+                        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-500 mx-auto mb-4"></div>
+                        <p class="text-purple-700 font-bold text-xl">🎨 Creating your learning adventure...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Display (Hidden initially) -->
+            <div id="contentDisplay" class="hidden bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 rounded-3xl shadow-2xl p-8 border-4 border-white">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 id="contentTitle" class="text-4xl font-black text-purple-800 flex items-center">🎓</h2>
+                    <button onclick="resetApp()" class="text-purple-500 hover:text-purple-700 transition-colors bg-white p-3 rounded-full shadow-lg hover:scale-110 transform">
+                        <i data-lucide="rotate-ccw" class="h-8 w-8"></i>
+                    </button>
+                </div>
+
+                <div id="contentBody" class="space-y-4 mb-8"></div>
+
+                <div id="funFactSection" class="hidden bg-gradient-to-r from-yellow-200 to-orange-200 p-6 rounded-2xl mb-8 border-l-8 border-yellow-500 shadow-lg transform hover:scale-105 transition-transform">
+                    <h3 class="font-black text-yellow-800 mb-3 flex items-center text-xl">
+                        <i data-lucide="star" class="h-6 w-6 mr-2 animate-spin"></i>
+                        🌟 Amazing Fun Fact! 🤯
+                    </h3>
+                    <p id="funFactText" class="text-yellow-700 text-lg font-bold"></p>
+                </div>
+
+                <button onclick="showQuiz()" class="w-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white py-6 rounded-2xl font-black text-xl hover:scale-105 transition-transform shadow-2xl border-4 border-white">
+                    <i data-lucide="check-circle" class="inline h-8 w-8 mr-3"></i>
+                    🎯 Complete Lesson & Take Quiz! 🏆
+                </button>
+            </div>
+
+            <!-- Quiz Display (Hidden initially) -->
+            <div id="quizDisplay" class="hidden bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 rounded-3xl shadow-2xl p-8 border-4 border-white">
+                <h2 class="text-3xl font-black text-purple-800 mb-6 text-center">🧠 Knowledge Check! 🎯</h2>
+                
+                <div id="quizSection" class="space-y-6">
+                    <div class="bg-gradient-to-r from-blue-200 to-purple-200 p-8 rounded-2xl border-l-8 border-blue-500 shadow-lg">
+                        <h3 id="quizQuestion" class="text-xl font-black text-blue-800 mb-6 flex items-center">🤔</h3>
+                        <div id="quizOptions" class="space-y-4"></div>
+                    </div>
+
+                    <button id="submitQuiz" onclick="submitQuiz()" class="w-full py-6 rounded-2xl font-black text-xl transition-all transform shadow-lg border-4 bg-gray-300 text-gray-500 cursor-not-allowed border-gray-400" style="pointer-events: none;">
+                        <i data-lucide="trophy" class="inline h-8 w-8 mr-3"></i>
+                        🚀 Submit Answer! 🎉
+                    </button>
+                </div>
+
+                <!-- Quiz Results -->
+                <div id="quizResults" class="hidden text-center space-y-8">
+                    <div id="resultIcon" class="w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl"></div>
+                    <h2 id="resultTitle" class="text-4xl font-black"></h2>
+                    <p id="resultMessage" class="text-xl font-bold"></p>
+                    <button onclick="resetApp()" class="bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-10 py-6 rounded-2xl font-black text-xl hover:scale-110 transition-transform shadow-2xl border-4 border-white">
+                        <i data-lucide="book-open" class="inline h-8 w-8 mr-3"></i>
+                        🚀 Learn Something New! 🌈
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="progressBar" class="bg-gradient-to-r from-purple-200 to-pink-200 rounded-2xl shadow-lg p-6 mt-6 border-4 border-white transform hover:scale-105 transition-transform">
+            <div class="flex justify-between text-lg text-purple-800 mb-3 font-bold">
+                <span id="progressText">🎯 Progress to Private ⭐</span>
+                <span id="progressPoints">0 / 50 ⚡</span>
+            </div>
+            <div class="w-full bg-purple-300 rounded-full h-6 shadow-inner">
+                <div id="progressBarFill" class="bg-gradient-to-r from-yellow-400 via-green-500 to-blue-500 h-6 rounded-full transition-all duration-1000 shadow-lg" style="width: 0%"></div>
+            </div>
+            <div class="text-center mt-2 text-purple-600 font-bold">
+                🌟 Keep learning to unlock the next rank! 🚀
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Game state
+        let gameState = {
+            currentRank: 0,
+            totalPoints: 0,
+            currentTopic: '',
+            learningMode: '',
+            selectedAnswer: '',
+            quiz: null,
+            content: null
+        };
+
+        const ranks = [
+            { name: 'Recruit', icon: '🔰', pointsRequired: 0, color: 'bg-gray-500' },
+            { name: 'Private', icon: '⭐', pointsRequired: 50, color: 'bg-green-500' },
+            { name: 'Sergeant', icon: '⭐⭐', pointsRequired: 150, color: 'bg-blue-500' },
+            { name: 'Captain', icon: '⭐⭐⭐', pointsRequired: 300, color: 'bg-purple-500' },
+            { name: 'General', icon: '👑', pointsRequired: 500, color: 'bg-yellow-500' }
+        ];
+
+        // Simulated AI content generation (you would replace this with actual API call)
+        function generateContent(topic, mode) {
+            const isDeepDive = mode === 'deep';
+            
+            // Sample content - in real implementation, this would call an AI API
+            const sampleContent = {
+                title: `Learning About: ${topic}`,
+                content: isDeepDive ? 
+                    `1. This topic has many fascinating aspects that we can explore in detail.\n2. Understanding the background helps us appreciate the complexity.\n3. There are historical contexts that shape our current understanding.\n4. Modern applications show how this knowledge is used today.\n5. Future developments continue to build on these foundations.\n6. Experts in this field contribute valuable insights.\n7. Real-world examples help us see practical applications.` :
+                    `1. This is an exciting topic that many people find interesting.\n2. There are lots of fascinating facts and details to discover.\n3. Learning about this helps us understand the world better.\n4. You can always ask more questions to learn even more.\n5. Keep being curious - it's the best way to learn!`,
+                funFact: `Did you know that learning about ${topic} can help you understand many other related topics? Knowledge builds on knowledge!`,
+                quiz: {
+                    question: `What's the most important thing about learning ${topic}?`,
+                    options: ['Memorizing facts', 'Understanding concepts', 'Taking tests', 'Being perfect'],
+                    correct: 1
+                }
+            };
+
+            return Promise.resolve(sampleContent);
+        }
+
+        function selectMode(mode) {
+            gameState.learningMode = mode;
+            
+            // Update button styles
+            const quickButton = document.getElementById('quickMode');
+            const deepButton = document.getElementById('deepMode');
+            
+            if (mode === 'quick') {
+                quickButton.className = 'p-6 rounded-2xl border-4 border-green-500 bg-gradient-to-r from-green-100 to-emerald-100 shadow-2xl scale-105 transition-all transform hover:scale-110 shadow-lg';
+                deepButton.className = 'p-6 rounded-2xl border-4 border-blue-300 bg-gradient-to-r from-blue-50 to-white hover:border-blue-400 transition-all transform hover:scale-110 shadow-lg';
+            } else {
+                quickButton.className = 'p-6 rounded-2xl border-4 border-green-300 bg-gradient-to-r from-green-50 to-white hover:border-green-400 transition-all transform hover:scale-110 shadow-lg';
+                deepButton.className = 'p-6 rounded-2xl border-4 border-blue-500 bg-gradient-to-r from-blue-100 to-purple-100 shadow-2xl scale-105 transition-all transform hover:scale-110 shadow-lg';
+            }
+            
+            updateInstructions();
+        }
+
+        function updateInstructions() {
+            const topic = document.getElementById('topicInput').value.trim();
+            const instructions = document.getElementById('instructions');
+            
+            if (topic && gameState.learningMode) {
+                instructions.textContent = '🎉 Perfect! Click the button below to start learning!';
+                instructions.className = 'text-center text-green-600 font-bold text-xl animate-pulse';
+            } else if (topic && !gameState.learningMode) {
+                instructions.textContent = '👆 Great topic! Now choose Quick Overview or Deep Dive!';
+                instructions.className = 'text-center text-blue-600 font-bold';
+            } else if (!topic && gameState.learningMode) {
+                instructions.textContent = '📝 Nice choice! Now enter a topic you want to learn about!';
+                instructions.className = 'text-center text-blue-600 font-bold';
+            } else {
+                instructions.textContent = '👆 Enter a topic and choose your learning mode to get started!';
+                instructions.className = 'text-center text-purple-600 font-bold';
+            }
+        }
+
+        async function startLearning() {
+            const topic = document.getElementById('topicInput').value.trim();
+            
+            if (!topic) {
+                alert('🤔 Please enter a topic you want to learn about first!');
+                document.getElementById('topicInput').focus();
+                return;
+            }
+            
+            if (!gameState.learningMode) {
+                alert('📚 Please choose either Quick Overview or Deep Dive first!');
+                return;
+            }
+
+            gameState.currentTopic = topic;
+
+            // Show loading
+            document.getElementById('topicSelection').classList.add('hidden');
+            document.getElementById('loadingState').classList.remove('hidden');
+
+            try {
+                // Generate content (replace with actual AI API call)
+                const content = await generateContent(topic, gameState.learningMode);
+                gameState.content = content;
+                gameState.quiz = content.quiz;
+
+                // Hide loading and show content
+                document.getElementById('loadingState').classList.add('hidden');
+                displayContent();
+            } catch (error) {
+                console.error('Error generating content:', error);
+                // Show fallback content
+                gameState.content = {
+                    title: `Learning About: ${topic}`,
+                    content: '1. Sometimes technology has hiccups, but that\'s okay!\n2. The important thing is that you\'re curious and want to learn.\n3. Try asking about this topic again, or explore something else!\n4. Every question is a step toward understanding.\n5. Keep being awesome and curious!',
+                    funFact: 'Did you know that asking questions is one of the smartest things you can do?',
+                    quiz: {
+                        question: 'What\'s the best way to learn?',
+                        options: ['Stay curious', 'Give up easily', 'Never ask questions', 'Be afraid of mistakes'],
+                        correct: 0
+                    }
+                };
+                gameState.quiz = gameState.content.quiz;
+                document.getElementById('loadingState').classList.add('hidden');
+                displayContent();
+            }
+        }
+
+        function displayContent() {
+            const content = gameState.content;
+            
+            // Set title
+            document.getElementById('contentTitle').textContent = `🎓 ${content.title}`;
+            
+            // Parse and display content
+            const contentBody = document.getElementById('contentBody');
+            contentBody.innerHTML = '';
+            
+            const lines = content.content.split('\n');
+            lines.forEach((line, index) => {
+                if (line.trim() === '') return;
+                
+                const numberedMatch = line.match(/^(\d+)\.\s*(.+)/);
+                if (numberedMatch) {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-start space-x-4 p-6 bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl border-l-8 border-gradient-to-b from-purple-500 to-pink-500 shadow-lg hover:shadow-xl transition-shadow transform hover:scale-102';
+                    div.innerHTML = `
+                        <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center font-black text-lg shadow-lg">
+                            ${numberedMatch[1]}
+                        </div>
+                        <p class="text-gray-800 text-lg leading-relaxed font-semibold">${numberedMatch[2]}</p>
+                    `;
+                    contentBody.appendChild(div);
+                } else {
+                    const p = document.createElement('p');
+                    p.className = 'text-gray-800 text-lg leading-relaxed p-4 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl shadow-md font-medium';
+                    p.textContent = line;
+                    contentBody.appendChild(p);
+                }
+            });
+            
+            // Show fun fact
+            if (content.funFact) {
+                document.getElementById('funFactText').textContent = content.funFact;
+                document.getElementById('funFactSection').classList.remove('hidden');
+            }
+            
+            // Show content display
+            document.getElementById('contentDisplay').classList.remove('hidden');
+        }
+
+        function showQuiz() {
+            // Award lesson completion points
+            const points = gameState.learningMode === 'deep' ? 30 : 15;
+            addPoints(points);
+            
+            // Hide content and show quiz
+            document.getElementById('contentDisplay').classList.add('hidden');
+            document.getElementById('quizDisplay').classList.remove('hidden');
+            
+            // Setup quiz
+            const quiz = gameState.quiz;
+            document.getElementById('quizQuestion').textContent = `🤔 ${quiz.question}`;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            quiz.options.forEach((option, index) => {
+                const label = document.createElement('label');
+                label.className = 'block p-6 rounded-xl border-4 cursor-pointer transition-all hover:scale-105 transform shadow-lg border-purple-300 bg-gradient-to-r from-white to-blue-50 hover:border-purple-400';
+                label.innerHTML = `
+                    <input type="radio" name="quiz" value="${index}" class="mr-4 w-5 h-5" onchange="selectAnswer(${index})">
+                    <span class="text-lg font-bold text-gray-800">${option}</span>
+                `;
+                optionsContainer.appendChild(label);
+            });
+        }
+
+        function selectAnswer(index) {
+            gameState.selectedAnswer = index;
+            
+            // Update submit button state
+            const button = document.getElementById('submitQuiz');
+            button.disabled = false;
+            button.style.pointerEvents = 'auto';
+            button.className = 'w-full py-6 rounded-2xl font-black text-xl transition-all transform shadow-lg border-4 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white hover:scale-105 shadow-2xl border-white animate-pulse';
+            
+            // Update option styles
+            const options = document.querySelectorAll('#quizOptions label');
+            options.forEach((label, i) => {
+                if (i === index) {
+                    label.className = 'block p-6 rounded-xl border-4 cursor-pointer transition-all hover:scale-105 transform shadow-lg border-purple-500 bg-gradient-to-r from-purple-100 to-pink-100 shadow-2xl scale-105';
+                } else {
+                    label.className = 'block p-6 rounded-xl border-4 cursor-pointer transition-all hover:scale-105 transform shadow-lg border-purple-300 bg-gradient-to-r from-white to-blue-50 hover:border-purple-400';
+                }
+            });
+        }
+
+        function submitQuiz() {
+            const isCorrect = gameState.selectedAnswer === gameState.quiz.correct;
+            
+            if (isCorrect) {
+                addPoints(20);
+            }
+            
+            // Hide quiz section and show results
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('quizResults').classList.remove('hidden');
+            
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultMessage = document.getElementById('resultMessage');
+            
+            if (isCorrect) {
+                resultIcon.className = 'bg-gradient-to-r from-green-400 to-blue-500 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl animate-bounce';
+                resultIcon.innerHTML = '<i data-lucide="check-circle" class="h-20 w-20 text-white"></i>';
+                resultTitle.textContent = '🎉 EXCELLENT! 🌟';
+                resultTitle.className = 'text-4xl font-black text-green-600';
+                resultMessage.textContent = 'You earned 20 bonus points! 🏆';
+                resultMessage.className = 'text-2xl font-bold text-green-600';
+            } else {
+                resultIcon.className = 'bg-gradient-to-r from-blue-400 to-purple-500 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl animate-pulse';
+                resultIcon.innerHTML = '<i data-lucide="brain" class="h-20 w-20 text-white"></i>';
+                resultTitle.textContent = '🤗 Good try! 💪';
+                resultTitle.className = 'text-4xl font-black text-blue-600';
+                resultMessage.innerHTML = `The correct answer was: <span class="text-purple-600">${gameState.quiz.options[gameState.quiz.correct]}</span> 📚`;
+                resultMessage.className = 'text-xl font-bold text-blue-600';
+            }
+            
+            // Re-initialize icons
+            lucide.createIcons();
+        }
+
+        function addPoints(points) {
+            gameState.totalPoints += points;
+            updateDisplay();
+            checkRankUp();
+        }
+
+        function checkRankUp() {
+            let newRank = 0;
+            for (let i = ranks.length - 1; i >= 0; i--) {
+                if (gameState.totalPoints >= ranks[i].pointsRequired) {
+                    newRank = i;
+                    break;
+                }
+            }
+            
+            if (newRank > gameState.currentRank) {
+                gameState.currentRank = newRank;
+                // You could add a rank up celebration here
+            }
+        }
+
+        function updateDisplay() {
+            // Update points
+            document.getElementById('pointsDisplay').textContent = gameState.totalPoints;
+            
+            // Update rank
+            const currentRank = ranks[gameState.currentRank];
+            const rankDisplay = document.getElementById('rankDisplay');
+            rankDisplay.className = `${currentRank.color} text-white px-6 py-3 rounded-full mb-2 shadow-lg border-4 border-white transform hover:scale-110 transition-transform`;
+            rankDisplay.innerHTML = `
+                <span class="text-3xl animate-pulse">${currentRank.icon}</span>
+                <span class="ml-2 font-black text-lg">${currentRank.name}</span>
+            `;
+            
+            // Update progress bar
+            if (gameState.currentRank < ranks.length - 1) {
+                const nextRank = ranks[gameState.currentRank + 1];
+                const currentRankPoints = ranks[gameState.currentRank].pointsRequired;
+                const progress = ((gameState.totalPoints - currentRankPoints) / (nextRank.pointsRequired - currentRankPoints)) * 100;
+                
+                document.getElementById('progressText').textContent = `🎯 Progress to ${nextRank.name} ${nextRank.icon}`;
+                document.getElementById('progressPoints').textContent = `${gameState.totalPoints} / ${nextRank.pointsRequired} ⚡`;
+                document.getElementById('progressBarFill').style.width = `${Math.min(100, progress)}%`;
+                document.getElementById('progressBar').classList.remove('hidden');
+            } else {
+                document.getElementById('progressBar').classList.add('hidden');
+            }
+        }
+
+        function resetApp() {
+            gameState.currentTopic = '';
+            gameState.learningMode = '';
+            gameState.selectedAnswer = '';
+            gameState.content = null;
+            gameState.quiz = null;
+            
+            // Reset UI
+            document.getElementById('topicInput').value = '';
+            document.getElementById('contentDisplay').classList.add('hidden');
+            document.getElementById('quizDisplay').classList.add('hidden');
+            document.getElementById('quizSection').classList.remove('hidden');
+            document.getElementById('quizResults').classList.add('hidden');
+            document.getElementById('funFactSection').classList.add('hidden');
+            document.getElementById('topicSelection').classList.remove('hidden');
+            
+            // Reset mode buttons
+            document.getElementById('quickMode').className = 'p-6 rounded-2xl border-4 border-green-300 bg-gradient-to-r from-green-50 to-white hover:border-green-400 transition-all transform hover:scale-110 shadow-lg';
+            document.getElementById('deepMode').className = 'p-6 rounded-2xl border-4 border-blue-300 bg-gradient-to-r from-blue-50 to-white hover:border-blue-400 transition-all transform hover:scale-110 shadow-lg';
+            
+            updateInstructions();
+        }
+
+        // Event listeners
+        document.getElementById('topicInput').addEventListener('input', updateInstructions);
+        document.getElementById('topicInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                startLearning();
+            }
+        });
+
+        // Initialize
+        updateDisplay();
+        updateInstructions(); // Set initial instructions
+        lucide.createIcons();
+    </script>
+</body>
+</html>
